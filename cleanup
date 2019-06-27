@@ -1,6 +1,0 @@
-#!/usr/bin/python
-
-from CleanupDb import CleanupDb
-
-runner = CleanupDb()
-runner.clean()

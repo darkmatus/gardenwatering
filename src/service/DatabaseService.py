@@ -89,5 +89,12 @@ class DatabaseService:
                 
         return duration
 
+    def clean(self):
+            cursor = self.connection.cursor()
+            getDate = date.today() - timedelta(days=5)
+            getDate = getDate.strftime("%Y-%m-%d %H:%M:%S")
+            cursor.execute("""DELETE FROM temperature WHERE messTime < ?""", ([getDate]))
+            self.connection.commit()
+
     def closeConnection(self):
         self.connection.close
