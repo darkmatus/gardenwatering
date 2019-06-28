@@ -7,7 +7,6 @@ tempScheduler = sched.scheduler(time.time, time.sleep)
 
 def rainChecker(sc):
     rainCheck = RainChecker()
-    print "Call Rain Check..."
     rainCheck.checkRain()
     rainScheduler.enter(600, 1, rainChecker, (sc,))
 

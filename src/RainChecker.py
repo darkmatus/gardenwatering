@@ -3,7 +3,7 @@ from src.service.DatabaseService import DatabaseService
 
 
 class RainChecker:
-    pin = 17  # GPIO fuer den Regensensor
+    pin = 17  # GPIO for rain sensor
 
     def checkRain(self):
         print self.pin
