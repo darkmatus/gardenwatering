@@ -29,19 +29,20 @@ The Cron runs every day 8 PM
  The main part (the temperature and rain check part) should be run as a service.
  This can be done as followed:
  `touch /etc/systemd/system/weatherCheck.service`
-> [Unit]
-> Description=weather check service
-> After=network.target
-> StartLimitIntervalSec=0
-> [Service]
-> Type=simple
-> Restart=always
-> RestartSec=1
-> User=pi
-> ExecStart=/usr/bin/python /home/pi/garden/watering/main.py
-> 
-> [Install]
-> WantedBy=multi-user.target
+` [Unit]
+  Description=weather check service
+  After=network.target
+  StartLimitIntervalSec=0
+  [Service]
+  Type=simple
+  Restart=always
+  RestartSec=1
+  User=pi
+  ExecStart=/usr/bin/python /home/pi/garden/watering/main.py
+  
+  [Install]
+  WantedBy=multi-user.target
+`
 
 Start the service:
 `systemctl start weatherCheck`
