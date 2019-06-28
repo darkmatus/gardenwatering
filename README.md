@@ -1,19 +1,32 @@
 # gardenwatering
 Python project for a garden watering system based on a raspberry pi (3B+), DHT22, HL-83 and a EnerGenie Programmable power strip (EG-PM2)
 
+# Used GPIO Pins
+The setup uses two external sensors. These are connected through GPIO with the Pi.
+
+## HL-83 (rain sensor)
+To work without changes, the HL-83 needs to be connected to GPIO 17. If you want to use a other pin change
+the pin variable in `src/RainChecker.py`.
+
+## DHT22 (temperature)
+The DHT22 needs to be connected to GPIO 4.
+If you want to use a other pin, cahnge the pin variable in `src/TempChecker.py`.
+
 # Installing needed Software
 
-`cd /tmp \
-&& sudo apt install pkg-config libusb-dev python python-pip python-openssl git -y \
-&& git clone https://github.com/adafruit/Adafruit_Python_DHT.git && cd Adafruit_Python_DHT \
-&& sudo python setup.py install \
-&& cd /tmp \
-&& wget -O sispmctl.tar.gz https://sourceforge.net/projects/sispmctl/files/latest/download \
-&& tar xzvf sispmctl.tar.gz \
-&& cd sispmctl-4.1 && ./configure && make && sudo make install \
-&& sudo ldconfig
-&& sudo echo 'pi ALL=NOPASSWD:/usr/local/bin' >> /etc/sudoers \
-&& sudo pip install --upgrade RPi.GPIO`
+```
+cd /tmp \  
+&& sudo apt install pkg-config libusb-dev python python-pip python-openssl git -y \  
+&& git clone https://github.com/adafruit/Adafruit_Python_DHT.git && cd Adafruit_Python_DHT \  
+&& sudo python setup.py install \  
+&& cd /tmp \  
+&& wget -O sispmctl.tar.gz https://sourceforge.net/projects/sispmctl/files/latest/download \  
+&& tar xzvf sispmctl.tar.gz \  
+&& cd sispmctl-4.1 && ./configure && make && sudo make install \  
+&& sudo ldconfig  
+&& sudo echo 'pi ALL=NOPASSWD:/usr/local/bin' >> /etc/sudoers \  
+&& sudo pip install --upgrade RPi.GPIO
+```
 
 # Cron Runs
 ## Database Cleanup
@@ -41,7 +54,8 @@ The Cron runs every day 8 PM
   ExecStart=/usr/bin/python /home/pi/garden/watering/main.py
   
   [Install]
-  WantedBy=multi-user.target```
+  WantedBy=multi-user.target
+  ```
 
 Start the service:
 `systemctl start weatherCheck`
