@@ -1,7 +1,7 @@
 # gardenwatering
 Python project for a garden watering system based on a raspberry pi (3B+), DHT22, HL-83 and a EnerGenie Programmable power strip (EG-PM2)
 
-#Installing needed Software
+# Installing needed Software
 
 `cd /tmp \
 && sudo apt install pkg-config libusb-dev python python-pip python-openssl git -y \
@@ -29,19 +29,19 @@ The Cron runs every day 8 PM
  The main part (the temperature and rain check part) should be run as a service.
  This can be done as followed:
  `touch /etc/systemd/system/weatherCheck.service`
- `[Unit]
-Description=weather check service
-After=network.target
-StartLimitIntervalSec=0
-[Service]
-Type=simple
-Restart=always
-RestartSec=1
-User=pi
-ExecStart=/usr/bin/python /home/pi/garden/watering/main.py
-
-[Install]
-WantedBy=multi-user.target`
+> [Unit]
+> Description=weather check service
+> After=network.target
+> StartLimitIntervalSec=0
+> [Service]
+> Type=simple
+> Restart=always
+> RestartSec=1
+> User=pi
+> ExecStart=/usr/bin/python /home/pi/garden/watering/main.py
+> 
+> [Install]
+> WantedBy=multi-user.target
 
 Start the service:
 `systemctl start weatherCheck`
