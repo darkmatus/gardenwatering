@@ -6,7 +6,6 @@ class RainChecker:
     pin = 17  # GPIO for rain sensor
 
     def checkRain(self):
-        print self.pin
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(False)
         GPIO.setup(self.pin, GPIO.IN)

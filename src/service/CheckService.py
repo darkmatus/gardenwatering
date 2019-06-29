@@ -8,10 +8,9 @@ class CheckService:
     def check(self):
         temperatur = self.databaseService.checkTemperatur()
         rained = self.databaseService.checkRained()
-        print(rained, temperatur)
-        if (rained == False) and (round(temperatur) > 19):
+        if (rained == False) and (round(temperatur) > 18):
             return True
-        elif (rained == True & round(temperatur) > 23):
+        elif (rained == True and round(temperatur) > 23):
             return True
         else:
             return False

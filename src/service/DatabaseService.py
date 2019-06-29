@@ -13,7 +13,6 @@ class DatabaseService:
         cursor = self.connection.cursor()
         cursor.execute("CREATE TABLE IF NOT EXISTS temperature (temperature real, messTime int)")
         cursor.execute("CREATE TABLE IF NOT EXISTS rain(rain int, rainTime int)")
-        cursor.execute("CREATE TABLE IF NOT EXISTS powerLog (status int, time int)")
         self.connection.commit()
             
     def getConnection(self):
@@ -45,37 +44,40 @@ class DatabaseService:
         cursor = self.connection.cursor()
         checkDate = date.today() - timedelta(days=3)
         checkDate = checkDate.strftime('%s')
-        cursor.execute("""SELECT temperature, messDate FROM temperature WHERE messTime > ?""", ([checkDate]))
+        cursor.execute("""SELECT temperature, messTime FROM temperature WHERE messTime > ?""", ([checkDate]))
         result = cursor.fetchall()
         daysMiddle = float(0)
         for row in result:
             daysMiddle += row[0]
             
-        return daysMiddle/len(result)
-    
+        if (len(result) != 0):
+            return daysMiddle/len(result)
+        return 17
+
     def checkRained(self):
         cursor = self.connection.cursor()
         checkDate = date.today() - timedelta(days=2)
-        cursor.execute('''INSERT INTO rain (rain, rainTime) VALUES (?,?)''', (0, datetime.now()))
-        cursor.execute('''INSERT INTO rain (rain, rainTime) VALUES (?,?)''', (1, '2019-06-23 15:23:34'))
-        cursor.execute('''INSERT INTO rain (rain, rainTime) VALUES (?,?)''', (0, '2019-06-22 15:23:34'))
         checkDate = checkDate.strftime('%s')
         cursor.execute("""SELECT rain, date(rainTime) FROM rain WHERE rainTime > ?""", ([checkDate]))
         result = cursor.fetchall()
+        thisDay = (date.today()).strftime('%Y-%m-%d')
         checkYesterday = (date.today() - timedelta(days=1)).strftime('%Y-%m-%d')
         checkBeforeYesterday = (date.today() - timedelta(days=2)).strftime('%Y-%m-%d')
         checkResult = False
         for row in result:
             if (bool(row[0])):
-                if (row[1] == checkYesterday):
+                if (row[1] == thisDay):
                     if (self.checkRainDuration(row[1]) > 15):
-                        checkResult = True
+                        return True
                     else:
                         checkResult = False
-                elif(row[1] == checkBeforeYesterday):
-                    checkResult &= False
+                elif (row[1] == checkYesterday):
+                    if (self.checkRainDuration(row[1]) > 15):
+                        return True
+                    else:
+                        checkResult = False
                 else:
-                    checkResult &= False
+                    checkResult = checkResult
         return checkResult
 
     def checkRainDuration(self, toCheck):
@@ -91,9 +93,10 @@ class DatabaseService:
 
     def clean(self):
             cursor = self.connection.cursor()
-            getDate = date.today() - timedelta(days=5)
+            getDate = date.today() - timedelta(days=3)
             getDate = getDate.strftime("%Y-%m-%d %H:%M:%S")
             cursor.execute("""DELETE FROM temperature WHERE messTime < ?""", ([getDate]))
+            cursor.execute("""DELETE FROM rain WHERE rainTime < ?""", ([getDate]))
             self.connection.commit()
 
     def closeConnection(self):
