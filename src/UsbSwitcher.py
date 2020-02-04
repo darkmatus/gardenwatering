@@ -6,7 +6,7 @@ class UsbSwitcher:
     
     def switch(self):
         if self.status == True:
-            commandResult = os.popen('sispmctl -o 0').read()
+            commandResult = os.popen('sispmctl -f 1').read()
             self.status = False
         else:
             commandResult = os.popen('sispmctl -o 1').read()
